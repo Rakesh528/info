@@ -1,0 +1,39 @@
+import requests
+import phonenumbers
+
+def get_public_ip():
+    try:
+        response = requests.get("https://api64.ipify.org?format=json")
+        data = response.json()
+        return data["ip"]
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None
+
+def validate_phone_number(phone_number):
+    try:
+        parsed_number = phonenumbers.parse(phone_number)
+        if phonenumbers.is_valid_number(parsed_number):
+            return phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        else:
+            return "Invalid phone number"
+    except phonenumbers.phonenumberutil.NumberFormatException as e:
+        return f"Error: {e}"
+
+if _name_ == "_main_":
+    print("Phone Information Tool")
+    print("1. Get Public IP Address")
+    print("2. Validate Phone Number")
+
+    choice = input("Enter your choice (1/2): ")
+
+    if choice == "1":
+        public_ip = get_public_ip()
+        if public_ip:
+            print(f"Your public IP address is: {public_ip}")
+    elif choice == "2":
+        phone_number = input("Enter the phone number: ")
+        formatted_number = validate_phone_number(phone_number)
+        print(f"Formatted phone number: {formatted_number}")
+    else:
+        print("Invalid choice")
